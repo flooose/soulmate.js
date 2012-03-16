@@ -7,20 +7,24 @@
     beforeEach(function() {
       var nullFunction;
       nullFunction = function() {};
-      return collection = new SuggestionCollection(nullFunction, nullFunction);
+      return collection = new SuggestionCollection(nullFunction, nullFunction, nullFunction);
     });
     describe('#initialize', function() {
       it('sets the render and select callbacks', function() {
-        var renderCallback, selectCallback, withCallbacks;
+        var containerCallback, renderCallback, selectCallback, withCallbacks;
         renderCallback = function() {
           return 'render';
         };
         selectCallback = function() {
           return 'select';
         };
-        withCallbacks = new SuggestionCollection(renderCallback, selectCallback);
+        containerCallback = function() {
+          return 'container';
+        };
+        withCallbacks = new SuggestionCollection(renderCallback, selectCallback, containerCallback);
         expect(withCallbacks.renderCallback()).toEqual('render');
-        return expect(withCallbacks.selectCallback()).toEqual('select');
+        expect(withCallbacks.selectCallback()).toEqual('select');
+        return expect(withCallbacks.containerCallback()).toEqual('container');
       });
       it('initializes the focusedIndex to -1', function() {
         return expect(collection.focusedIndex).toEqual(-1);
