@@ -1,16 +1,15 @@
 (function() {
   var Soulmate;
-
   Soulmate = window._test.Soulmate;
-
   describe('Soulmate', function() {
-    var renderCallback, selectCallback, soulmate;
-    soulmate = renderCallback = selectCallback = null;
+    var containerCallback, renderCallback, selectCallback, soulmate;
+    soulmate = renderCallback = selectCallback = containerCallback = null;
     beforeEach(function() {
       renderCallback = function(term, data, type) {
         return term;
       };
       selectCallback = function() {};
+      containerCallback = function() {};
       setFixtures(sandbox());
       $('#sandbox').html($('<input type="text" id="search">'));
       return soulmate = new Soulmate($('#search'), {
@@ -18,6 +17,7 @@
         types: ['type1', 'type2', 'type3'],
         renderCallback: renderCallback,
         selectCallback: selectCallback,
+        containerCallback: containerCallback,
         minQueryLength: 2,
         maxResults: 5
       });
@@ -287,6 +287,7 @@
         timeout: 2000,
         renderCallback: renderCallback,
         selectCallback: selectCallback,
+        containerCallback: containerCallback,
         minQueryLength: 2,
         maxResults: 5
       });
@@ -294,5 +295,4 @@
       return expect(soulmate2.timeout).toEqual(2000);
     });
   });
-
 }).call(this);

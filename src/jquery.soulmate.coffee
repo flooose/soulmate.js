@@ -93,8 +93,7 @@ class SuggestionCollection
 
       h += @_renderTypeEnd( type )
 
-    @containerCallback
-    # @_renderContainerCallback
+      @containerCallback.call(@, h)
 
     return h
 
@@ -130,9 +129,6 @@ class SuggestionCollection
     @focusedIndex == -1
 
   # PRIVATE
-  _renderContainerCallback: () ->
-    console.log('blah')
-
   _renderTypeStart: ->
     """
       <li class="soulmate-type-container">
@@ -157,7 +153,14 @@ class Soulmate
 
     that = this
 
-    {url, types, renderCallback, selectCallback, maxResults, minQueryLength, timeout} = options
+    { url,
+      types,
+      renderCallback,
+      selectCallback,
+      containerCallback,
+      maxResults,
+      minQueryLength,
+      timeout } = options
 
 
     @url              = url
@@ -166,8 +169,7 @@ class Soulmate
     @timeout          = timeout || 500
 
     @xhr              = null
-
-    @suggestions      = new SuggestionCollection( renderCallback, selectCallback )
+    @suggestions      = new SuggestionCollection( renderCallback, selectCallback, containerCallback )
     @query            = new Query( minQueryLength )
 
     if ($('ul#soulmate').length > 0)

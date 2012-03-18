@@ -1,52 +1,54 @@
 Soulmate = window._test.Soulmate
 
 describe 'Soulmate', ->
-    
-  soulmate = renderCallback = selectCallback = null
-    
+
+  soulmate = renderCallback = selectCallback = containerCallback = null
+
   beforeEach ->
     renderCallback = (term, data, type) -> term
     selectCallback = ->
-        
+    containerCallback = ->
+
     setFixtures( sandbox() )
     $('#sandbox').html($('<input type="text" id="search">'))
-    
+
     soulmate = new Soulmate( $('#search'), {
       url:            'http://localhost'
       types:          ['type1', 'type2', 'type3']
       renderCallback: renderCallback
       selectCallback: selectCallback
+      containerCallback: containerCallback
       minQueryLength: 2
       maxResults: 5
     })
-  
+
   context 'with a mocked fetchResults method', ->
-    
+
     beforeEach ->
       soulmate.fetchResults = ->
-    
-    it 'adds a container to the dom with an id of "soulmate"', ->      
+
+    it 'adds a container to the dom with an id of "soulmate"', ->
       expect( $('#soulmate') ).toExist()
-    
+
     describe 'mousing over the input field', ->
 
       it 'should blur all the suggestions', ->
         expect(-> soulmate.input.trigger( 'mouseover' ) ).toCall( soulmate.suggestions, 'blurAll' )
-      
+
     describe 'pressing a key down in the input field', ->
 
       keyDown = keyDownEvent = null
 
       beforeEach ->
-        keyDownEvent = $.Event( 'keydown' )          
+        keyDownEvent = $.Event( 'keydown' )
         keyDown = (key) ->
           KEYCODES = {tab: 9, enter: 13, escape: 27, up: 38, down: 40}
-          keyDownEvent.keyCode = KEYCODES[key]  
+          keyDownEvent.keyCode = KEYCODES[key]
           soulmate.input.trigger( keyDownEvent )
 
       describe 'escape', ->
 
-        it 'hides the container', ->    
+        it 'hides the container', ->
           expect( -> keyDown('escape') ).toCall( soulmate, 'hideContainer' )
 
       describe 'tab', ->
@@ -54,7 +56,7 @@ describe 'Soulmate', ->
         tab = -> keyDown('tab')
 
         it 'selects the currently focused selection', ->
-          expect( tab ).toCall( soulmate.suggestions, 'selectFocused' )    
+          expect( tab ).toCall( soulmate.suggestions, 'selectFocused' )
 
         it 'prevents the default action', ->
           expect( tab ).toCall( keyDownEvent, 'preventDefault' )
@@ -64,24 +66,24 @@ describe 'Soulmate', ->
         enter = -> keyDown('enter')
 
         it 'selects the currently focused selection', ->
-          expect( enter ).toCall( soulmate.suggestions, 'selectFocused' ) 
+          expect( enter ).toCall( soulmate.suggestions, 'selectFocused' )
 
         context 'when no suggestion is focused', ->
 
-          beforeEach -> 
+          beforeEach ->
             soulmate.suggestions.allBlured = -> true
 
           it 'submits the form', ->
             expect( enter ).not.toCall( keyDownEvent, 'preventDefault' )
-            
+
         context 'when a suggestion is focused', ->
-                    
-          beforeEach -> 
+
+          beforeEach ->
             soulmate.suggestions.allBlured = -> false
-                    
+
           it 'doesnt submit the form', ->
             expect( enter ).toCall( keyDownEvent, 'preventDefault' )
-            
+
       describe 'up', ->
 
         it 'focuses the previous selection', ->
@@ -95,7 +97,7 @@ describe 'Soulmate', ->
       describe 'any other key', ->
 
         it 'allows the default action to occur', ->
-          expect( -> keyDown('a') ).not.toCall( keyDownEvent, 'preventDefault' )    
+          expect( -> keyDown('a') ).not.toCall( keyDownEvent, 'preventDefault' )
 
     describe 'releasing a key in the input field', ->
 
@@ -138,7 +140,7 @@ describe 'Soulmate', ->
 
           it 'should hide the container', ->
             expect( keyUp ).toCall( soulmate, 'hideContainer' )
-    
+
     context 'showing suggestions', ->
 
       beforeEach ->
@@ -170,33 +172,33 @@ describe 'Soulmate', ->
 
         it 'selects the clicked suggestion', ->
           expect( click ).toCall( soulmate.suggestions, 'selectFocused')
-    
+
     describe '#hideContainer', ->
-      
+
       it 'blurs all the suggestions', ->
         expect( -> soulmate.hideContainer() ).toCall( soulmate.suggestions, 'blurAll' )
-      
+
       it 'hides the container', ->
         soulmate.container.show()
         soulmate.hideContainer()
         expect( soulmate.container ).toBeHidden()
-      
+
     describe '#showContainer', ->
-    
+
       it 'shows the container', ->
         soulmate.container.hide()
         soulmate.showContainer()
-        expect( soulmate.container).toBeVisible()      
-        
+        expect( soulmate.container).toBeVisible()
+
     describe '#update', ->
 
       context 'with a non-empty result set', ->
 
         update = -> soulmate.update( fixtures.responseWithResults.results )
-      
+
         it 'shows the container', ->
-          expect( update ).toCall( soulmate, 'showContainer' )  
-            
+          expect( update ).toCall( soulmate, 'showContainer' )
+
         it 'shows the new suggestions', ->
           update()
           expect( soulmate.container.html() ).toMatch(/2012 Super Bowl/)
@@ -207,24 +209,24 @@ describe 'Soulmate', ->
 
         it 'hides the container', ->
           expect( update ).toCall( soulmate, 'hideContainer' )
-          
+
         it 'marks the current query as empty', ->
-          expect( update ).toCall( soulmate.query, 'markEmpty' )  
-    
+          expect( update ).toCall( soulmate.query, 'markEmpty' )
+
   # NOTE: Spec-ing jsonp requests is challenging, and these tests are sparse.
   describe '#fetchResults', ->
-    
+
     beforeEach ->
       soulmate.query.setValue( 'job' )
       spyOn( $, 'ajax' )
       soulmate.fetchResults()
-      
+
     it 'requests the given url as an ajax request', ->
       expect( $.ajax.mostRecentCall.args[0].url ).toEqual( soulmate.url )
 
     it 'calls "update" with the responses results on success', ->
       expect( -> $.ajax.mostRecentCall.args[0].success( {results: {}} ) ).toCall( soulmate, 'update' )
-            
+
   it "can accept timeout as a parameter", ->
     soulmate2 = new Soulmate( $('#search'), {
       url:            'http://localhost'
@@ -232,6 +234,7 @@ describe 'Soulmate', ->
       timeout:        2000
       renderCallback: renderCallback
       selectCallback: selectCallback
+      containerCallback: containerCallback
       minQueryLength: 2
       maxResults: 5
     })

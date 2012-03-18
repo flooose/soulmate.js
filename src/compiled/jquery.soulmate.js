@@ -123,8 +123,8 @@
           h += this._renderSuggestion(suggestion);
         }
         h += this._renderTypeEnd(type);
+        this.containerCallback.call(this, h);
       }
-      this.containerCallback;
       return h;
     };
     SuggestionCollection.prototype.count = function() {
@@ -160,9 +160,6 @@
     SuggestionCollection.prototype.allBlured = function() {
       return this.focusedIndex === -1;
     };
-    SuggestionCollection.prototype._renderContainerCallback = function() {
-      return console.log('blah');
-    };
     SuggestionCollection.prototype._renderTypeStart = function() {
       return "<li class=\"soulmate-type-container\">\n  <ul class=\"soulmate-type-suggestions\">";
     };
@@ -184,18 +181,18 @@
       40: 'down'
     };
     function Soulmate(input, options) {
-      var maxResults, minQueryLength, renderCallback, selectCallback, that, timeout, types, url;
+      var containerCallback, maxResults, minQueryLength, renderCallback, selectCallback, that, timeout, types, url;
       this.input = input;
       this.handleKeyup = __bind(this.handleKeyup, this);;
       this.handleKeydown = __bind(this.handleKeydown, this);;
       that = this;
-      url = options.url, types = options.types, renderCallback = options.renderCallback, selectCallback = options.selectCallback, maxResults = options.maxResults, minQueryLength = options.minQueryLength, timeout = options.timeout;
+      url = options.url, types = options.types, renderCallback = options.renderCallback, selectCallback = options.selectCallback, containerCallback = options.containerCallback, maxResults = options.maxResults, minQueryLength = options.minQueryLength, timeout = options.timeout;
       this.url = url;
       this.types = types;
       this.maxResults = maxResults;
       this.timeout = timeout || 500;
       this.xhr = null;
-      this.suggestions = new SuggestionCollection(renderCallback, selectCallback);
+      this.suggestions = new SuggestionCollection(renderCallback, selectCallback, containerCallback);
       this.query = new Query(minQueryLength);
       if ($('ul#soulmate').length > 0) {
         this.container = $('ul#soulmate');
