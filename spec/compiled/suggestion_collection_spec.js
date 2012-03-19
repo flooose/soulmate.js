@@ -5,9 +5,12 @@
     var collection;
     collection = null;
     beforeEach(function() {
-      var nullFunction;
+      var echoFunction, nullFunction;
       nullFunction = function() {};
-      return collection = new SuggestionCollection(nullFunction, nullFunction, nullFunction);
+      echoFunction = function(arg) {
+        return arg;
+      };
+      return collection = new SuggestionCollection(nullFunction, nullFunction, echoFunction);
     });
     describe('#initialize', function() {
       it('sets the render and select callbacks', function() {

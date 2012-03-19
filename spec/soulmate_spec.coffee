@@ -7,7 +7,7 @@ describe 'Soulmate', ->
   beforeEach ->
     renderCallback = (term, data, type) -> term
     selectCallback = ->
-    containerCallback = ->
+    containerCallback = (h) -> h
 
     setFixtures( sandbox() )
     $('#sandbox').html($('<input type="text" id="search">'))

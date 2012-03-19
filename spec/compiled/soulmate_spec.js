@@ -9,7 +9,9 @@
         return term;
       };
       selectCallback = function() {};
-      containerCallback = function() {};
+      containerCallback = function(h) {
+        return h;
+      };
       setFixtures(sandbox());
       $('#sandbox').html($('<input type="text" id="search">'));
       return soulmate = new Soulmate($('#search'), {

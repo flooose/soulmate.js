@@ -57,7 +57,7 @@ class Suggestion
     $('#' + @id)
 
 class SuggestionCollection
-  constructor: (@renderCallback, @selectCallback, @containerCallback) ->
+  constructor: (@renderCallback, @selectCallback, @containerCallback = (h) -> h) ->
     @focusedIndex = -1
     @suggestions = []
 
@@ -78,13 +78,10 @@ class SuggestionCollection
     h = ''
 
     if @suggestions.length
-
       type = null
 
       for suggestion in @suggestions
-
         if suggestion.type != type
-
           h += @_renderTypeEnd( type ) unless type == null
           type = suggestion.type
           h += @_renderTypeStart()
@@ -93,7 +90,7 @@ class SuggestionCollection
 
       h += @_renderTypeEnd( type )
 
-      @containerCallback.call(@, h)
+      h = @containerCallback(h)
 
     return h
 

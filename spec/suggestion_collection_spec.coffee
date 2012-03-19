@@ -6,7 +6,8 @@ describe 'SuggestionCollection', ->
 
   beforeEach ->
     nullFunction = ->
-    collection = new SuggestionCollection( nullFunction, nullFunction, nullFunction )
+    echoFunction = (arg) -> arg
+    collection = new SuggestionCollection( nullFunction, nullFunction, echoFunction )
 
   describe '#initialize', ->
 

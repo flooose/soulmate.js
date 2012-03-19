@@ -70,7 +70,9 @@
     function SuggestionCollection(renderCallback, selectCallback, containerCallback) {
       this.renderCallback = renderCallback;
       this.selectCallback = selectCallback;
-      this.containerCallback = containerCallback;
+      this.containerCallback = containerCallback != null ? containerCallback : function(h) {
+        return h;
+      };
       this.focusedIndex = -1;
       this.suggestions = [];
     }
@@ -123,7 +125,7 @@
           h += this._renderSuggestion(suggestion);
         }
         h += this._renderTypeEnd(type);
-        this.containerCallback.call(this, h);
+        h = this.containerCallback(h);
       }
       return h;
     };
