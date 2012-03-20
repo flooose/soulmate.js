@@ -183,12 +183,12 @@
       40: 'down'
     };
     function Soulmate(input, options) {
-      var containerCallback, maxResults, minQueryLength, renderCallback, selectCallback, that, timeout, types, url;
+      var containerCallback, emptyCallback, maxResults, minQueryLength, renderCallback, selectCallback, that, timeout, types, url;
       this.input = input;
       this.handleKeyup = __bind(this.handleKeyup, this);;
       this.handleKeydown = __bind(this.handleKeydown, this);;
       that = this;
-      url = options.url, types = options.types, renderCallback = options.renderCallback, selectCallback = options.selectCallback, containerCallback = options.containerCallback, maxResults = options.maxResults, minQueryLength = options.minQueryLength, timeout = options.timeout;
+      url = options.url, types = options.types, renderCallback = options.renderCallback, selectCallback = options.selectCallback, containerCallback = options.containerCallback, emptyCallback = options.emptyCallback, maxResults = options.maxResults, minQueryLength = options.minQueryLength, timeout = options.timeout;
       this.url = url;
       this.types = types;
       this.maxResults = maxResults;
@@ -295,7 +295,11 @@
         return this.showContainer();
       } else {
         this.query.markEmpty();
-        return this.hideContainer();
+        if (typeof this.emptyCallback !== 'undefined') {
+          return this.container.html($(this.emptyCallback()));
+        } else {
+          return this.hideContainer();
+        }
       }
     };
     return Soulmate;

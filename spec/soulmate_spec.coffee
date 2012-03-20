@@ -207,8 +207,13 @@ describe 'Soulmate', ->
 
         update = -> soulmate.update( fixtures.responseWithNoResults.results )
 
-        it 'hides the container', ->
+        it 'hides the container if emptyCallback is undefined', ->
           expect( update ).toCall( soulmate, 'hideContainer' )
+
+        it 'calls emptyCallback if it\'s defined and there are no results', ->
+          soulmate.emptyCallback = ->
+          update = -> soulmate.update( fixtures.responseWithNoResults.results )
+          expect( update ).toCall( soulmate, 'emptyCallback' )
 
         it 'marks the current query as empty', ->
           expect( update ).toCall( soulmate.query, 'markEmpty' )

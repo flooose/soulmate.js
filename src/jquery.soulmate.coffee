@@ -155,6 +155,7 @@ class Soulmate
       renderCallback,
       selectCallback,
       containerCallback,
+      emptyCallback,
       maxResults,
       minQueryLength,
       timeout } = options
@@ -276,7 +277,10 @@ class Soulmate
 
     else
       @query.markEmpty()
-      @hideContainer()
+      if typeof(@emptyCallback) != 'undefined'
+        @container.html( $(@emptyCallback()) )
+      else
+        @hideContainer()
 
 $.fn.soulmate = (options) ->
   new Soulmate($(this), options)

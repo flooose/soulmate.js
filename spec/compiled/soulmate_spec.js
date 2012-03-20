@@ -255,8 +255,15 @@
           update = function() {
             return soulmate.update(fixtures.responseWithNoResults.results);
           };
-          it('hides the container', function() {
+          it('hides the container if emptyCallback is undefined', function() {
             return expect(update).toCall(soulmate, 'hideContainer');
+          });
+          it('calls emptyCallback if it\'s defined and there are no results', function() {
+            soulmate.emptyCallback = function() {};
+            update = function() {
+              return soulmate.update(fixtures.responseWithNoResults.results);
+            };
+            return expect(update).toCall(soulmate, 'emptyCallback');
           });
           return it('marks the current query as empty', function() {
             return expect(update).toCall(soulmate.query, 'markEmpty');
