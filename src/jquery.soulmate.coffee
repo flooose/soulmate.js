@@ -169,6 +169,7 @@ class Soulmate
     @xhr              = null
     @suggestions      = new SuggestionCollection( renderCallback, selectCallback, containerCallback )
     @query            = new Query( minQueryLength )
+    @emptyCallback    = emptyCallback
 
     if ($('ul#soulmate').length > 0)
       @container = $('ul#soulmate')
@@ -279,6 +280,7 @@ class Soulmate
       @query.markEmpty()
       if typeof(@emptyCallback) != 'undefined'
         @container.html( $(@emptyCallback()) )
+        @showContainer()
       else
         @hideContainer()
 

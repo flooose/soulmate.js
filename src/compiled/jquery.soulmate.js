@@ -196,6 +196,7 @@
       this.xhr = null;
       this.suggestions = new SuggestionCollection(renderCallback, selectCallback, containerCallback);
       this.query = new Query(minQueryLength);
+      this.emptyCallback = emptyCallback;
       if ($('ul#soulmate').length > 0) {
         this.container = $('ul#soulmate');
       } else {
@@ -296,7 +297,8 @@
       } else {
         this.query.markEmpty();
         if (typeof this.emptyCallback !== 'undefined') {
-          return this.container.html($(this.emptyCallback()));
+          this.container.html($(this.emptyCallback()));
+          return this.showContainer();
         } else {
           return this.hideContainer();
         }
